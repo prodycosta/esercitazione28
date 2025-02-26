@@ -4,19 +4,15 @@ import esercitazione28.object.model.Utente;
 import esercitazione28.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.NoSuchElementException;
-
 
 @Service
 public class UtenteServiceImpl implements UtenteService {
 
-    private final UtenteRepository utenteRepository;
-
     @Autowired
-    public UtenteServiceImpl(UtenteRepository utenteRepository) {
-        this.utenteRepository = utenteRepository;
-    }
+    private UtenteRepository utenteRepository;
 
     @Override
     public Utente createUtente(Utente utente) {

@@ -150,7 +150,19 @@ public class ConversionTools {
         dettaglio.setId(dto.getId());
         dettaglio.setQuantita(dto.getQuantita());
         dettaglio.setPrezzoTotale(dto.getPrezzoTotale());
-        // Le associazioni a Ordine e Prodotto possono essere settate altrove
+
+        // Se il DTO contiene gli ID per ordine e prodotto, crea oggetti "placeholder"
+        if(dto.getOrdineId() != null) {
+            Ordine ordine = new Ordine();
+            ordine.setId(dto.getOrdineId());
+            dettaglio.setOrdine(ordine);
+        }
+        if(dto.getProdottoId() != null) {
+            Prodotto prodotto = new Prodotto();
+            prodotto.setId(dto.getProdottoId());
+            dettaglio.setProdotto(prodotto);
+        }
+
         return dettaglio;
     }
 }

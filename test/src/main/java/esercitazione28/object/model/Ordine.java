@@ -1,10 +1,8 @@
 package esercitazione28.object.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,9 +18,8 @@ public class Ordine {
     private Long id;
 
     private LocalDate data;
-    // Stato può assumere i valori: "IN_ATTESA", "SPEDITO", "CONSEGNATO"
-    private String stato;
-    private Double totale;
+    private String stato; // IN_ATTESA, SPEDITO, CONSEGNATO
+    private Double totale = 0.0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utente_id", nullable = false)
@@ -31,22 +28,19 @@ public class Ordine {
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DettaglioOrdine> dettagli = new ArrayList<>();
 
-    // Metodo di utilità per aggiungere un dettaglio e aggiornare il totale
+    // Metodo di utilità per aggiungere un dettaglio
     public void addDettaglio(DettaglioOrdine dettaglio) {
+        // Imposta la relazione bidirezionale
         dettagli.add(dettaglio);
         dettaglio.setOrdine(this);
-        if (totale == null) {
-            totale = 0.0;
-        }
-        totale += dettaglio.getPrezzoTotale();
-    }
 
-    // Metodo di utilità per rimuovere un dettaglio e aggiornare il totale
-    public void removeDettaglio(DettaglioOrdine dettaglio) {
-        dettagli.remove(dettaglio);
-        dettaglio.setOrdine(null);
-        if (totale != null) {
-            totale -= dettaglio.getPrezzoTotale();
+        // Calcola automaticamente il prezzo totale in base al prezzo unitario del prodotto e alla quantità
+        // Assumendo che il prezzoTotale debba essere: prodotto.prezzo * dettaglio.quantita
+        if(dettaglio.getProdotto() != null && dettaglio.getQuantita() != null) {
+            Double prezzoCalcolato = dettaglio.getProdotto().getPrezzo() * dettaglio.getQuantita();
+            dettaglio.setPrezzoTotale(prezzoCalcolato);
+            // Aggiorna il totale dell'ordine
+            this.totale += prezzoCalcolato;
         }
     }
 }
