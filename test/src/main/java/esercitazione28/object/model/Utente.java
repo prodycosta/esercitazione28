@@ -23,13 +23,13 @@ public class Utente {
     @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ordine> ordini = new ArrayList<>();
 
-    // Metodo di utilità per aggiungere un ordine e gestire la relazione bidirezionale
+    // Metodo per aggiungere un ordine e gestire la relazione bidirezionale
     public void addOrdine(Ordine ordine) {
         ordini.add(ordine);
         ordine.setUtente(this);
     }
 
-    // Metodo di utilità per rimuovere un ordine
+    // Metodo per rimuovere un ordine
     public void removeOrdine(Ordine ordine) {
         ordini.remove(ordine);
         ordine.setUtente(null);

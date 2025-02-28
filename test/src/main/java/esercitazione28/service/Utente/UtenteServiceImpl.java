@@ -29,4 +29,13 @@ public class UtenteServiceImpl implements UtenteService {
         return utenteRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Utente non trovato con id: " + id));
     }
+
+    @Override
+    public Double getTotaleSpeso(Long utenteId) {
+        Utente utente = getUtenteById(utenteId);
+        // Itera su tutti gli ordini dell'utente e somma il campo "totale"
+        return utente.getOrdini().stream()
+                .mapToDouble(ordine -> ordine.getTotale() != null ? ordine.getTotale() : 0.0)
+                .sum();
+    }
 }

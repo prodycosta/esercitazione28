@@ -7,4 +7,5 @@ public interface UtenteService {
     Utente createUtente(Utente utente);
     List<Utente> getAllUtenti();
     Utente getUtenteById(Long id);
+    Double getTotaleSpeso(Long utenteId);
 }

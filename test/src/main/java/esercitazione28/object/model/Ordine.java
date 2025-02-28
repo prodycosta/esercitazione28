@@ -18,28 +18,25 @@ public class Ordine {
     private Long id;
 
     private LocalDate data;
-    private String stato; // IN_ATTESA, SPEDITO, CONSEGNATO
+    private String stato;
     private Double totale = 0.0;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DettaglioOrdine> dettagli = new ArrayList<>();
-
-    // Metodo di utilità per aggiungere un dettaglio
+    //incapsula la logica di dominio relativa all'ordine
+//Ogni volta che aggiungi un dettaglio all'ordine, viene gestito autonamente
+    // Metodo per aggiungere un dettaglio al'ordine
     public void addDettaglio(DettaglioOrdine dettaglio) {
-        // Imposta la relazione bidirezionale
         dettagli.add(dettaglio);
         dettaglio.setOrdine(this);
-
-        // Calcola automaticamente il prezzo totale in base al prezzo unitario del prodotto e alla quantità
-        // Assumendo che il prezzoTotale debba essere: prodotto.prezzo * dettaglio.quantita
+        //se dettaglio contiene prodotto e qualitá allora calcola prezzo totale
         if(dettaglio.getProdotto() != null && dettaglio.getQuantita() != null) {
             Double prezzoCalcolato = dettaglio.getProdotto().getPrezzo() * dettaglio.getQuantita();
             dettaglio.setPrezzoTotale(prezzoCalcolato);
-            // Aggiorna il totale dell'ordine
             this.totale += prezzoCalcolato;
         }
     }

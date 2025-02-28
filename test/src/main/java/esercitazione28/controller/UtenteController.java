@@ -30,11 +30,17 @@ public class UtenteController {
         return ResponseEntity.ok(utenti);
     }
 
-    // Endpoint per recuperare un utente specifico (inclusi gli ordini associati)
+    // Endpoint per recuperare un utente specifico
     @GetMapping("/{id}")
     public ResponseEntity<Utente> getUtenteById(@PathVariable Long id) {
         Utente utente = utenteService.getUtenteById(id);
         return ResponseEntity.ok(utente);
+    }
+
+    @GetMapping("/{id}/totale-speso")
+    public ResponseEntity<Double> getTotaleSpeso(@PathVariable Long id) {
+        Double totale = utenteService.getTotaleSpeso(id);
+        return ResponseEntity.ok(totale);
     }
 }
 

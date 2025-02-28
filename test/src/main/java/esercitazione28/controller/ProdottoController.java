@@ -23,7 +23,7 @@ public class ProdottoController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // Endpoint GET per recuperare tutti i prodotti disponibili
+    // Endpoint per recuperare tutti i prodotti disponibili
     @GetMapping
     public ResponseEntity<List<Prodotto>> getAllProdotti() {
         List<Prodotto> prodotti = prodottoService.getAllProdotti();

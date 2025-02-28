@@ -27,10 +27,11 @@ public class OrdineServiceImpl implements OrdineService {
 
     @Override
     public Ordine createOrdine(Ordine ordine) {
-        // Imposta la data corrente e inizializza il totale a 0.0
-        ordine.setData(LocalDate.now());
-        ordine.setTotale(0.0);
-        // È importante che l'oggetto Ordine abbia il riferimento all'utente valorizzato (ad es. {"utente": {"id": 1}})
+        // Non impostiamo LocalDate.now(), usiamo la data fornita nel payload.
+        // Se necessario, puoi comunque verificare che la data non sia nulla e gestirla in altro modo.
+        if(ordine.getTotale() == null) {
+            ordine.setTotale(0.0);
+        }
         return ordineRepository.save(ordine);
     }
 
@@ -41,38 +42,43 @@ public class OrdineServiceImpl implements OrdineService {
 
     @Override
     public Ordine updateStato(Long id, String stato) {
+        //recupero ordine dal repository
         Ordine ordine = ordineRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Ordine non trovato con id: " + id));
-        ordine.setStato(stato);
+        ordine.setStato(stato);//nuovo stato
         return ordineRepository.save(ordine);
     }
+//coordina operazione a livello di business
+@Override
+public DettaglioOrdine addDettaglio(Long ordineId, DettaglioOrdine dettaglio) {
+    // Recupera l'ordine esistente
+    Ordine ordine = ordineRepository.findById(ordineId)
+            .orElseThrow(() -> new NoSuchElementException("Ordine non trovato con id: " + ordineId));
+
+    // Verifica che il dettaglio contenga un prodotto valido
+    if (dettaglio.getProdotto() == null || dettaglio.getProdotto().getId() == null) {
+        throw new IllegalArgumentException("Il prodotto del dettaglio non è valido");
+    }
+    Long prodottoId = dettaglio.getProdotto().getId();
+    // Carica il prodotto completo dal repository
+    Prodotto prodotto = prodottoRepository.findById(prodottoId)
+            .orElseThrow(() -> new NoSuchElementException("Prodotto non trovato con id: " + prodottoId));
+    dettaglio.setProdotto(prodotto);
+
+    // Aggiunge il dettaglio all'ordine. Il metodo addDettaglio dell'entità Ordine gestisce
+    // la relazione bidirezionale e aggiorna il totale.
+    ordine.addDettaglio(dettaglio);
+
+    // Salva l'ordine aggiornato, il quale persisterà anche il dettaglio grazie a Cascade.ALL
+    ordineRepository.save(ordine);
+
+    // Non serve salvare nuovamente il dettaglio separatamente per evitare duplicazioni
+    return dettaglio;
+}
 
     @Override
-    public DettaglioOrdine addDettaglio(Long ordineId, DettaglioOrdine dettaglio) {
-        // Recupera l'ordine esistente
-        Ordine ordine = ordineRepository.findById(ordineId)
-                .orElseThrow(() -> new NoSuchElementException("Ordine non trovato con id: " + ordineId));
-
-        // Verifica che il dettaglio contenga un prodotto valido
-        if (dettaglio.getProdotto() == null || dettaglio.getProdotto().getId() == null) {
-            throw new IllegalArgumentException("Il prodotto del dettaglio non è valido");
-        }
-        Long prodottoId = dettaglio.getProdotto().getId();
-        // Carica il prodotto completo dal repository, in modo da avere il prezzo corretto
-        Prodotto prodotto = prodottoRepository.findById(prodottoId)
-                .orElseThrow(() -> new NoSuchElementException("Prodotto non trovato con id: " + prodottoId));
-        dettaglio.setProdotto(prodotto);
-
-        // Aggiunge il dettaglio all'ordine. Il metodo addDettaglio dell'entità Ordine:
-        // - Imposta la relazione bidirezionale
-        // - Calcola il prezzo totale per il dettaglio (prodotto.prezzo * quantita)
-        // - Aggiorna il totale dell'ordine
-        ordine.addDettaglio(dettaglio);
-
-        // Salva l'ordine aggiornato
-        ordineRepository.save(ordine);
-        // Salva e ritorna il dettaglio d'ordine
-        return dettaglioOrdineRepository.save(dettaglio);
+    public List<Ordine> getOrdiniByDateRange(LocalDate start, LocalDate end) {
+        return ordineRepository.findByDataBetween(start, end);
     }
 }
 

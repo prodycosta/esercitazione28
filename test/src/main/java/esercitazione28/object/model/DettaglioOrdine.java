@@ -19,11 +19,11 @@ public class DettaglioOrdine {
     @Column(name = "prezzo_totale")
     private Double prezzoTotale;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ordine_id", nullable = false)
     private Ordine ordine;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "prodotto_id", nullable = false)
     private Prodotto prodotto;
 }
