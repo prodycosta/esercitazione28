@@ -4,7 +4,6 @@ import esercitazione28.object.model.Utente;
 import esercitazione28.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -33,7 +32,6 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public Double getTotaleSpeso(Long utenteId) {
         Utente utente = getUtenteById(utenteId);
-        // Itera su tutti gli ordini dell'utente e somma il campo "totale"
         return utente.getOrdini().stream()
                 .mapToDouble(ordine -> ordine.getTotale() != null ? ordine.getTotale() : 0.0)
                 .sum();

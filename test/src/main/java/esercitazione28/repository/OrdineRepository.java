@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface OrdineRepository extends JpaRepository<Ordine, Long> {
     // Metodo per recuperare gli ordini la cui data è compresa tra start e end (inclusi)
-    List<Ordine> findByDataBetween(LocalDate start, LocalDate end);
+    List<Ordine> findByDataBetween(LocalDate startDate, LocalDate endDate);
 }
 

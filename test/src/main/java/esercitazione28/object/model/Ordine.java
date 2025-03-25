@@ -1,13 +1,15 @@
 package esercitazione28.object.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Data
 @NoArgsConstructor
@@ -27,18 +29,7 @@ public class Ordine {
 
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DettaglioOrdine> dettagli = new ArrayList<>();
-    //incapsula la logica di dominio relativa all'ordine
-//Ogni volta che aggiungi un dettaglio all'ordine, viene gestito autonamente
-    // Metodo per aggiungere un dettaglio al'ordine
-    public void addDettaglio(DettaglioOrdine dettaglio) {
-        dettagli.add(dettaglio);
-        dettaglio.setOrdine(this);
-        //se dettaglio contiene prodotto e qualitá allora calcola prezzo totale
-        if(dettaglio.getProdotto() != null && dettaglio.getQuantita() != null) {
-            Double prezzoCalcolato = dettaglio.getProdotto().getPrezzo() * dettaglio.getQuantita();
-            dettaglio.setPrezzoTotale(prezzoCalcolato);
-            this.totale += prezzoCalcolato;
-        }
-    }
+
 }
+
 

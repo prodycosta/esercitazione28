@@ -1,9 +1,12 @@
 package esercitazione28.object.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Data
 @NoArgsConstructor
@@ -27,3 +30,4 @@ public class DettaglioOrdine {
     @JoinColumn(name = "prodotto_id", nullable = false)
     private Prodotto prodotto;
 }
+

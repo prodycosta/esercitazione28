@@ -3,7 +3,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/gestione_ordini?allowPublicKeyRetrieval=true&useSSL=false
     username: root
-    password:
+    password: Mnllnd95
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:

@@ -4,7 +4,6 @@ import esercitazione28.object.model.Prodotto;
 import esercitazione28.repository.ProdottoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -23,5 +22,6 @@ public class ProdottoServiceImpl implements ProdottoService {
         return prodottoRepository.findAll();
     }
 }
+
 
 

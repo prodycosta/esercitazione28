@@ -1,13 +1,14 @@
 package esercitazione28.object.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Data
 @NoArgsConstructor
@@ -23,16 +24,15 @@ public class Utente {
     @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ordine> ordini = new ArrayList<>();
 
-    // Metodo per aggiungere un ordine e gestire la relazione bidirezionale
     public void addOrdine(Ordine ordine) {
         ordini.add(ordine);
         ordine.setUtente(this);
     }
 
-    // Metodo per rimuovere un ordine
     public void removeOrdine(Ordine ordine) {
         ordini.remove(ordine);
         ordine.setUtente(null);
     }
 }
+
 

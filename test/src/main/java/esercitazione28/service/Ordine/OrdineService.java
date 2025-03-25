@@ -12,5 +12,6 @@ public interface OrdineService {
     Ordine updateStato(Long id, String stato);
     DettaglioOrdine addDettaglio(Long ordineId, DettaglioOrdine dettaglio);
     List<Ordine> getOrdiniByDateRange(LocalDate start, LocalDate end);
+    Double getTotaleSpeso(Long id);
 }
 
